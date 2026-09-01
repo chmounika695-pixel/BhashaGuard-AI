@@ -1,0 +1,152 @@
+{
+  "dataset_size": 38,
+  "overall": {
+    "n": 38,
+    "accuracy": 0.947,
+    "precision": 0.929,
+    "recall": 1.0,
+    "f1_score": 0.963,
+    "confusion_matrix": {
+      "true_positive": 26,
+      "false_positive": 2,
+      "false_negative": 0,
+      "true_negative": 10
+    }
+  },
+  "by_language": {
+    "bn": {
+      "n": 4,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": {
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 1
+      }
+    },
+    "en": {
+      "n": 12,
+      "accuracy": 0.917,
+      "precision": 0.889,
+      "recall": 1.0,
+      "f1_score": 0.941,
+      "confusion_matrix": {
+        "true_positive": 8,
+        "false_positive": 1,
+        "false_negative": 0,
+        "true_negative": 3
+      }
+    },
+    "hi": {
+      "n": 6,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": {
+        "true_positive": 4,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 2
+      }
+    },
+    "kn": {
+      "n": 6,
+      "accuracy": 0.833,
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1_score": 0.889,
+      "confusion_matrix": {
+        "true_positive": 4,
+        "false_positive": 1,
+        "false_negative": 0,
+        "true_negative": 1
+      }
+    },
+    "ta": {
+      "n": 6,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": {
+        "true_positive": 4,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 2
+      }
+    },
+    "te": {
+      "n": 4,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": {
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 1
+      }
+    }
+  },
+  "by_script_type": {
+    "code_mixed": {
+      "n": 2,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "true_negative": 0
+      }
+    },
+    "native": {
+      "n": 27,
+      "accuracy": 0.963,
+      "precision": 0.947,
+      "recall": 1.0,
+      "f1_score": 0.973,
+      "confusion_matrix": {
+        "true_positive": 18,
+        "false_positive": 1,
+        "false_negative": 0,
+        "true_negative": 8
+      }
+    },
+    "romanized": {
+      "n": 9,
+      "accuracy": 0.889,
+      "precision": 0.857,
+      "recall": 1.0,
+      "f1_score": 0.923,
+      "confusion_matrix": {
+        "true_positive": 6,
+        "false_positive": 1,
+        "false_negative": 0,
+        "true_negative": 2
+      }
+    }
+  },
+  "engine_note": "Metrics reflect whichever content-scoring engine was active when this was run (rule-based only, or rule-based+Groq LLM if GROQ_API_KEY was set) — see content_analysis.engine in any /api/scan response.",
+  "misclassified_examples": [
+    {
+      "text": "Your Amazon order #4471 has shipped and will arrive Thursday.",
+      "true": "safe",
+      "predicted": "phishing",
+      "tier": "SUSPICIOUS"
+    },
+    {
+      "text": "Nalé nimma jothe cinema hogona antha plan madidivi.",
+      "true": "safe",
+      "predicted": "phishing",
+      "tier": "SUSPICIOUS"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# Optional extras for screenshot OCR and QR code scanning.
+#
+# OCR: if GROQ_API_KEY is set (see requirements.txt / README), OCR works
+# out of the box via Groq's vision model — nothing below is needed for
+# OCR. Only install pytesseract as a fallback if you want OCR to work
+# without an API key:
+#   pip install pytesseract Pillow
+#   + system Tesseract binary (not pip-installable):
+#     Windows: https://github.com/UB-Mannheim/tesseract/wiki
+#     Mac:     brew install tesseract
+#     Linux:   apt install tesseract-ocr
+#
+# QR decoding: pyzbar is recommended — its Windows wheel bundles the
+# required libzbar DLL, so no separate system install is needed (unlike
+# Tesseract). It's also notably more robust than the OpenCV fallback,
+# especially for QR codes with a logo overlaid in the center.
+pyzbar
+Pillow
+
+# Optional fallback QR decoder, only used if pyzbar isn't installed:
+opencv-python-headless
+numpy

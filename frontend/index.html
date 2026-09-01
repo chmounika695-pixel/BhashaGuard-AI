@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BhashaGuard AI — Regional-Language Phishing Shield</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg: #0f172a; --bg-card: #16213a; --bg-card-hover: #1c2b4a;
+    --border: #263453; --text: #e6ebf5; --text-dim: #93a2c2;
+    --blue: #3b82f6; --blue-glow: rgba(59,130,246,0.35);
+    --green: #10b981; --green-glow: rgba(16,185,129,0.4);
+    --yellow: #eab308; --yellow-glow: rgba(234,179,8,0.4);
+    --orange: #f97316; --orange-glow: rgba(249,115,22,0.4);
+    --red: #ef4444; --red-glow: rgba(239,68,68,0.45);
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    margin: 0; min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #0b1224, #16213a);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  header .brand { display: flex; align-items: center; gap: 10px; }
+  header .brand .logo { font-size: 26px; }
+  header h1 { margin: 0; font-size: 19px; }
+  header p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-dim); }
+
+  nav {
+    display: flex; gap: 4px; padding: 0 24px; background: #0b1224;
+    border-bottom: 1px solid var(--border); overflow-x: auto;
+  }
+  nav button {
+    background: none; border: none; color: var(--text-dim);
+    padding: 12px 16px; font-size: 13.5px; cursor: pointer;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    font-weight: 500;
+  }
+  nav button.active { color: var(--blue); border-bottom-color: var(--blue); }
+  nav button:hover { color: var(--text); }
+
+  main { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px; margin-bottom: 18px;
+  }
+  .card h3 { margin: 0 0 14px; font-size: 15px; color: var(--text); }
+  .muted { color: var(--text-dim); font-size: 12.5px; }
+
+  textarea, input[type=text], select {
+    width: 100%; background: #0b1224; border: 1.5px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 11px 12px;
+    font-size: 14.5px; font-family: inherit;
+  }
+  textarea { min-height: 90px; resize: vertical; }
+  textarea:focus, input:focus, select:focus { outline: none; border-color: var(--blue); }
+
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .examples button {
+    background: #1c2b4a; border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: 20px; padding: 6px 13px; font-size: 12px; cursor: pointer;
+  }
+  .examples button:hover { color: var(--text); border-color: var(--blue); }
+
+  .btn-primary {
+    background: var(--blue); color: white; border: none; padding: 11px 22px;
+    border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; }
+  .btn-secondary {
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    padding: 10px 18px; border-radius: 8px; font-size: 13.5px; cursor: pointer;
+  }
+
+  select { width: auto; }
+
+  .verdict-banner {
+    border-radius: 14px; padding: 20px 22px; margin-bottom: 18px;
+    border: 1.5px solid; display: none;
+  }
+  .verdict-banner.SAFE { background: rgba(16,185,129,0.08); border-color: var(--green); box-shadow: 0 0 24px var(--green-glow); }
+  .verdict-banner.SUSPICIOUS { background: rgba(234,179,8,0.08); border-color: var(--yellow); box-shadow: 0 0 24px var(--yellow-glow); }
+  .verdict-banner.HIGH_RISK { background: rgba(249,115,22,0.08); border-color: var(--orange); box-shadow: 0 0 24px var(--orange-glow); }
+  .verdict-banner.PHISHING { background: rgba(239,68,68,0.08); border-color: var(--red); box-shadow: 0 0 24px var(--red-glow); }
+  .verdict-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .verdict-tier { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+  .verdict-score { font-size: 13.5px; color: var(--text-dim); }
+  .verdict-lang { font-size: 12.5px; color: var(--text-dim); margin-top: 6px; }
+  .verdict-lang b { color: var(--text); }
+
+  .breakdown-bar-row { display: flex; align-items: center; gap: 10px; margin: 7px 0; }
+  .breakdown-label { width: 150px; font-size: 12.5px; color: var(--text-dim); flex-shrink: 0; }
+  .breakdown-track { flex: 1; background: #0b1224; border-radius: 6px; height: 9px; overflow: hidden; }
+  .breakdown-fill { height: 100%; border-radius: 6px; }
+  .breakdown-value { width: 34px; text-align: right; font-size: 12px; color: var(--text-dim); }
+
+  .pill { display: inline-block; background: #1c2b4a; border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 12px; margin: 3px 4px 3px 0; }
+  ul.plain { margin: 6px 0 0; padding-left: 18px; font-size: 13.5px; }
+  ul.plain li { margin-bottom: 4px; }
+
+  audio { width: 100%; margin-top: 10px; }
+  .feedback-row { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
+  .feedback-row button { background: #1c2b4a; border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 13px; }
+  .feedback-row button:hover { border-color: var(--blue); }
+
+  .drop-zone {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 30px;
+    text-align: center; color: var(--text-dim); cursor: pointer; font-size: 13.5px;
+  }
+  .drop-zone:hover { border-color: var(--blue); color: var(--text); }
+  .preview-img { max-width: 100%; max-height: 220px; border-radius: 8px; margin-top: 12px; display: none; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-dim); font-weight: 600; font-size: 12px; }
+  .tier-tag { padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .tier-tag.SAFE { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tier-tag.SUSPICIOUS { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .tier-tag.HIGH_RISK { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .tier-tag.PHISHING { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+  .stat-box { background: #0b1224; border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .stat-box .num { font-size: 24px; font-weight: 800; color: var(--blue); }
+  .stat-box .label { font-size: 11.5px; color: var(--text-dim); margin-top: 4px; }
+
+  .status-msg { font-size: 12.5px; color: var(--text-dim); margin-top: 8px; }
+  footer { text-align: center; font-size: 11.5px; color: var(--text-dim); padding: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">🛡️</span>
+    <div>
+      <h1>BhashaGuard AI</h1>
+      <p>Any language. Any suspicious message. One intelligent security shield.</p>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="analyze">Analyze</button>
+  <button class="tab-btn" data-tab="screenshot">Scan Screenshot</button>
+  <button class="tab-btn" data-tab="qr">Scan QR</button>
+  <button class="tab-btn" data-tab="history">Detection History</button>
+  <button class="tab-btn" data-tab="insights">Threat Insights</button>
+  <button class="tab-btn" data-tab="report">Report Scam</button>
+</nav>
+
+<main>
+
+  <div class="panel active" id="panel-analyze">
+    <div class="card">
+      <h3>Is this safe?</h3>
+      <textarea id="analyzeInput" placeholder="Paste a suspicious message, SMS, or URL — in any language..."></textarea>
+      <div class="examples">
+        <button data-fill="Nimma bank account block agutte. KYC update madi immediately: hdfcbnk-kyc-verify.xyz">Kannada+English scam</button>
+        <button data-fill="आपका बैंक खाता आज बंद हो जाएगा। कृपया तुरंत अपना KYC सत्यापित करें और OTP साझा करें।">Devanagari KYC scam</button>
+        <button data-fill="Congratulations! You have won Rs 25,00,000 in KBC lottery. Claim now: kbc-lottery-claim.top">Lottery scam URL</button>
+        <button data-fill="Hey, are we still meeting for lunch tomorrow at 1pm?">Safe message</button>
+      </div>
+      <div class="row" style="margin-top:14px;">
+        <label class="muted" for="warningLangSelect">Warning language:</label>
+        <select id="warningLangSelect">
+          <option value="">Same as detected</option>
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="ta">Tamil</option>
+          <option value="te">Telugu</option>
+          <option value="bn">Bengali</option>
+          <option value="kn">Kannada</option>
+        </select>
+      </div>
+      <br>
+      <button class="btn-primary" id="analyzeBtn">Analyze Message</button>
+      <div class="status-msg" id="analyzeStatus"></div>
+    </div>
+
+    <div id="analyzeResult"></div>
+  </div>
+
+  <div class="panel" id="panel-screenshot">
+    <div class="card">
+      <h3>Scan Screenshot / OCR</h3>
+      <p class="muted">Upload a WhatsApp scam screenshot or fake payment receipt — text is extracted and analyzed the same way as typed messages.</p>
+      <div class="drop-zone" id="screenshotDropZone">Click to choose an image, or drag one here</div>
+      <input type="file" id="screenshotInput" accept="image/*" style="display:none;">
+      <img id="screenshotPreview" class="preview-img">
+      <br><br>
+      <button class="btn-primary" id="screenshotBtn" disabled>Scan Screenshot</button>
+      <div class="status-msg" id="screenshotStatus"></div>
+    </div>
+    <div id="screenshotResult"></div>
+  </div>
+
+  <div class="panel" id="panel-qr">
+    <div class="card">
+      <h3>Scan QR Code</h3>
+      <p class="muted">Upload a QR code image — its destination is decoded and checked with the same URL intelligence engine.</p>
+      <div class="drop-zone" id="qrDropZone">Click to choose a QR image, or drag one here</div>
+      <input type="file" id="qrInput" accept="image/*" style="display:none;">
+      <img id="qrPreview" class="preview-img">
+      <br><br>
+      <button class="btn-primary" id="qrBtn" disabled>Scan QR Code</button>
+      <div class="status-msg" id="qrStatus"></div>
+    </div>
+    <div id="qrResult"></div>
+  </div>
+
+  <div class="panel" id="panel-history">
+    <div class="card">
+      <h3>Detection History</h3>
+      <p class="muted">Only a short snippet of each message is stored — never the full text or images.</p>
+      <div id="historyTableWrap"><p class="muted">Loading…</p></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-insights">
+    <div class="card">
+      <h3>Threat Insights</h3>
+      <p class="muted">Computed live from everything analyzed on this deployment — real data, not simulated.</p>
+      <div id="insightsWrap"><p class="muted">Loading…</p></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-report">
+    <div class="card">
+      <h3>Report a Scam</h3>
+      <p class="muted">Help protect others — report a suspicious URL or message. A single report is marked "unverified"; reputation rises with multiple independent reports.</p>
+      <label class="muted">Suspicious URL (optional)</label>
+      <input type="text" id="reportUrl" placeholder="e.g. hdfcbnk-verify.xyz">
+      <br><br>
+      <label class="muted">Message snippet</label>
+      <textarea id="reportText" placeholder="Paste the scam message..."></textarea>
+      <br>
+      <button class="btn-primary" id="reportBtn">Submit Report</button>
+      <div class="status-msg" id="reportStatus"></div>
+    </div>
+    <div class="card">
+      <h3>Recent Community Reports</h3>
+      <div id="reportsWrap"><p class="muted">Loading…</p></div>
+    </div>
+  </div>
+
+  </main>
+
+<footer>BhashaGuard AI · Final-round build · FastAPI + rule-based multi-signal fusion + optional LLM refinement</footer>
+
+<script>
+const TIER_CLASS = { "SAFE": "SAFE", "SUSPICIOUS": "SUSPICIOUS", "HIGH RISK": "HIGH_RISK", "PHISHING": "PHISHING" };
+const TIER_COLOR = { "SAFE": "var(--green)", "SUSPICIOUS": "var(--yellow)", "HIGH RISK": "var(--orange)", "PHISHING": "var(--red)" };
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+    if (btn.dataset.tab === "history") loadHistory();
+    if (btn.dataset.tab === "insights") loadInsights();
+    if (btn.dataset.tab === "report") loadReports();
+  });
+});
+
+function renderVerdict(container, data) {
+  const v = data.verdict;
+  const tierClass = TIER_CLASS[v.tier] || "SAFE";
+
+  let html = `
+    <div class="verdict-banner ${tierClass}" style="display:block;">
+      <div class="verdict-top">
+        <div class="verdict-tier" style="color:${TIER_COLOR[v.tier]}">${v.badge} ${v.tier}</div>
+        <div class="verdict-score">Risk score: ${v.final_risk_score}/100</div>
+      </div>
+      <div class="verdict-lang">
+        <b>Detected Language:</b> ${data.language.language_name} &nbsp;|&nbsp;
+        <b>Script:</b> ${data.language.script} &nbsp;|&nbsp;
+        <b>Code-Mixed:</b> ${data.language.code_mixed ? "Yes" : "No"} &nbsp;|&nbsp;
+        <b>Category:</b> ${v.category}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Why We Flagged It</h3>
+      ${v.indicators.length ? `<ul class="plain">${v.indicators.map(i => `<li>${i}</li>`).join("")}</ul>` : `<p class="muted">No specific risk indicators found.</p>`}
+
+      ${v.attacker_goal.length ? `
+        <h3 style="margin-top:18px;">What the Attacker May Want</h3>
+        <div>${v.attacker_goal.map(g => `<span class="pill">${g}</span>`).join("")}</div>
+      ` : ""}
+
+      <h3 style="margin-top:18px;">What You Should Do</h3>
+      <p style="font-size:14.5px; background:#0b1224; border-left:3px solid ${TIER_COLOR[v.tier]}; padding:10px 14px; border-radius:6px;">
+        ${data.safety_action} <span class="muted">(in ${data.warning_language})</span>
+      </p>
+
+      <h3 style="margin-top:18px;">Voice Warning</h3>
+      ${data.audio_base64_mp3
+        ? `<audio controls autoplay src="data:audio/mp3;base64,${data.audio_base64_mp3}"></audio>`
+        : `<p class="muted">Voice warning could not be generated (TTS service unreachable) — network access is needed for this feature.</p>`}
+    </div>
+  `;
+  container.innerHTML = html;
+}
+
+document.querySelectorAll("[data-fill]").forEach(b => {
+  b.addEventListener("click", () => { document.getElementById("analyzeInput").value = b.dataset.fill; });
+});
+
+document.getElementById("analyzeBtn").addEventListener("click", async () => {
+  const text = document.getElementById("analyzeInput").value.trim();
+  if (!text) return;
+  const btn = document.getElementById("analyzeBtn");
+  const status = document.getElementById("analyzeStatus");
+  const resultDiv = document.getElementById("analyzeResult");
+  btn.disabled = true; status.textContent = "Analyzing...";
+  resultDiv.innerHTML = "";
+  try {
+    const res = await fetch("/api/scan", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        text,
+        warning_language: document.getElementById("warningLangSelect").value || null,
+        include_voice: true,
+      })
+    });
+    if (!res.ok) throw new Error("API error " + res.status);
+    const data = await res.json();
+    renderVerdict(resultDiv, data);
+    status.textContent = "";
+  } catch (e) {
+    status.textContent = "Error: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+let screenshotFile = null;
+document.getElementById("screenshotDropZone").addEventListener("click", () => document.getElementById("screenshotInput").click());
+document.getElementById("screenshotInput").addEventListener("change", (e) => {
+  screenshotFile = e.target.files[0];
+  if (!screenshotFile) return;
+  const preview = document.getElementById("screenshotPreview");
+  preview.src = URL.createObjectURL(screenshotFile);
+  preview.style.display = "block";
+  document.getElementById("screenshotBtn").disabled = false;
+});
+document.getElementById("screenshotBtn").addEventListener("click", async () => {
+  if (!screenshotFile) return;
+  const btn = document.getElementById("screenshotBtn");
+  const status = document.getElementById("screenshotStatus");
+  const resultDiv = document.getElementById("screenshotResult");
+  btn.disabled = true; status.textContent = "Running OCR + analysis...";
+  resultDiv.innerHTML = "";
+  try {
+    const form = new FormData();
+    form.append("file", screenshotFile);
+    form.append("warning_language", "");
+    form.append("include_voice", "true");
+    const res = await fetch("/api/scan/screenshot", { method: "POST", body: form });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const detail = data.detail || data.reason || `Upload failed (HTTP ${res.status})`;
+      throw new Error(detail);
+    }
+    if (!data.ocr_available) {
+      resultDiv.innerHTML = `<div class="card"><p class="muted">${data.reason}</p></div>`;
+    } else if (!data.analysis) {
+      resultDiv.innerHTML = `<div class="card"><p class="muted">${data.reason || "No text found."}</p></div>`;
+    } else {
+      const extractedCard = document.createElement("div");
+      extractedCard.className = "card";
+      const engine = data.ocr_engine || "OCR";
+      extractedCard.innerHTML = `<h3>Extracted Text</h3><p class="muted">OCR engine: ${engine}</p>`;
+      const extracted = document.createElement("p");
+      extracted.style.cssText = "font-size:13.5px; color:var(--text-dim); white-space:pre-wrap;";
+      extracted.textContent = data.extracted_text || "";
+      extractedCard.appendChild(extracted);
+      resultDiv.innerHTML = "";
+      resultDiv.appendChild(extractedCard);
+      const extraDiv = document.createElement("div");
+      resultDiv.appendChild(extraDiv);
+      renderVerdict(extraDiv, data.analysis);
+    }
+    status.textContent = "";
+  } catch (e) {
+    status.textContent = "Error: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+let qrFile = null;
+document.getElementById("qrDropZone").addEventListener("click", () => document.getElementById("qrInput").click());
+document.getElementById("qrInput").addEventListener("change", (e) => {
+  qrFile = e.target.files[0];
+  if (!qrFile) return;
+  const preview = document.getElementById("qrPreview");
+  preview.src = URL.createObjectURL(qrFile);
+  preview.style.display = "block";
+  document.getElementById("qrBtn").disabled = false;
+});
+document.getElementById("qrBtn").addEventListener("click", async () => {
+  if (!qrFile) return;
+  const btn = document.getElementById("qrBtn");
+  const status = document.getElementById("qrStatus");
+  const resultDiv = document.getElementById("qrResult");
+  btn.disabled = true; status.textContent = "Decoding + analyzing...";
+  resultDiv.innerHTML = "";
+  try {
+    const form = new FormData();
+    form.append("file", qrFile);
+    form.append("warning_language", "");
+    form.append("include_voice", "true");
+    const res = await fetch("/api/scan/qr", { method: "POST", body: form });
+    const data = await res.json();
+    if (!data.qr_available || !data.analysis) {
+      resultDiv.innerHTML = `<div class="card"><p class="muted">${data.reason}</p></div>`;
+    } else {
+      resultDiv.innerHTML = `<div class="card"><h3>Decoded Destination</h3><p style="font-size:13.5px; color:var(--text-dim); word-break:break-all;">${data.decoded_text}</p></div>`;
+      const extraDiv = document.createElement("div");
+      resultDiv.appendChild(extraDiv);
+      renderVerdict(extraDiv, data.analysis);
+    }
+    status.textContent = "";
+  } catch (e) {
+    status.textContent = "Error: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function loadHistory() {
+  const wrap = document.getElementById("historyTableWrap");
+  try {
+    const res = await fetch("/api/history?limit=50");
+    const data = await res.json();
+    if (!data.history.length) { wrap.innerHTML = `<p class="muted">No analyses yet — try the Analyze tab.</p>`; return; }
+    wrap.innerHTML = `
+      <table>
+        <tr><th>When</th><th>Type</th><th>Language</th><th>Category</th><th>Score</th><th>Verdict</th></tr>
+        ${data.history.map(h => `
+          <tr>
+            <td>${new Date(h.timestamp*1000).toLocaleString()}</td>
+            <td>${h.input_type}</td>
+            <td>${h.language}</td>
+            <td>${h.category}</td>
+            <td>${h.risk_score}</td>
+            <td><span class="tier-tag ${TIER_CLASS[h.tier]}">${h.tier}</span></td>
+          </tr>
+        `).join("")}
+      </table>`;
+  } catch (e) { wrap.innerHTML = `<p class="muted">Could not load history.</p>`; }
+}
+
+async function loadInsights() {
+  const wrap = document.getElementById("insightsWrap");
+  try {
+    const res = await fetch("/api/insights");
+    const d = await res.json();
+    const byTier = Object.entries(d.by_tier).map(([k,v]) => `<span class="pill">${k}: ${v}</span>`).join("");
+    const byLang = Object.entries(d.by_language).map(([k,v]) => `<span class="pill">${k}: ${v}</span>`).join("") || "<span class='muted'>—</span>";
+    const byCat = Object.entries(d.by_category).map(([k,v]) => `<span class="pill">${k}: ${v}</span>`).join("") || "<span class='muted'>—</span>";
+    wrap.innerHTML = `
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">${d.total_analyses}</div><div class="label">Total Analyses</div></div>
+        <div class="stat-box"><div class="num">${d.threats_detected}</div><div class="label">Threats Detected</div></div>
+        <div class="stat-box"><div class="num">${d.high_risk_detections}</div><div class="label">High Risk / Phishing</div></div>
+        <div class="stat-box"><div class="num">${d.community_reports}</div><div class="label">Community Reports</div></div>
+      </div>
+      <h3 style="margin-top:20px;">By Verdict Tier</h3><div>${byTier}</div>
+      <h3 style="margin-top:16px;">By Language</h3><div>${byLang}</div>
+      <h3 style="margin-top:16px;">By Category</h3><div>${byCat}</div>
+    `;
+  } catch (e) { wrap.innerHTML = `<p class="muted">Could not load insights.</p>`; }
+}
+
+document.getElementById("reportBtn").addEventListener("click", async () => {
+  const url = document.getElementById("reportUrl").value.trim();
+  const text = document.getElementById("reportText").value.trim();
+  const status = document.getElementById("reportStatus");
+  if (!url && !text) { status.textContent = "Provide a URL or message to report."; return; }
+  try {
+    const res = await fetch("/api/report", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ url: url || null, message_snippet: text, category: "Other", language: "en" })
+    });
+    const d = await res.json();
+    status.textContent = `Reported. Total reports for this item: ${d.total_reports_for_this_item} (${d.reputation})`;
+    document.getElementById("reportUrl").value = ""; document.getElementById("reportText").value = "";
+    loadReports();
+  } catch (e) { status.textContent = "Error: " + e.message; }
+});
+
+async function loadReports() {
+  const wrap = document.getElementById("reportsWrap");
+  try {
+    const res = await fetch("/api/reports?limit=20");
+    const d = await res.json();
+    if (!d.reports.length) { wrap.innerHTML = `<p class="muted">No reports yet.</p>`; return; }
+    wrap.innerHTML = `
+      <table>
+        <tr><th>When</th><th>URL / Snippet</th><th>Category</th></tr>
+        ${d.reports.map(r => `
+          <tr>
+            <td>${new Date(r.timestamp*1000).toLocaleDateString()}</td>
+            <td>${r.url || r.message_snippet}</td>
+            <td>${r.category}</td>
+          </tr>
+        `).join("")}
+      </table>`;
+  } catch (e) { wrap.innerHTML = `<p class="muted">Could not load reports.</p>`; }
+}
+
+[["screenshotDropZone","screenshotInput"], ["qrDropZone","qrInput"]].forEach(([zoneId, inputId]) => {
+  const zone = document.getElementById(zoneId);
+  zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.style.borderColor = "var(--blue)"; });
+  zone.addEventListener("dragleave", () => { zone.style.borderColor = "var(--border)"; });
+  zone.addEventListener("drop", (e) => {
+    e.preventDefault(); zone.style.borderColor = "var(--border)";
+    if (e.dataTransfer.files.length) {
+      document.getElementById(inputId).files = e.dataTransfer.files;
+      document.getElementById(inputId).dispatchEvent(new Event("change"));
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+[
+  {"text": "Dear customer, your SBI account will be blocked today. Verify your KYC immediately: sbi-kyc-verify.xyz", "label": "phishing", "language": "en", "script": "native", "category": "KYC"},
+  {"text": "Congratulations! You have won Rs 25,00,000 in KBC lottery. Claim now: kbc-lottery-claim.top", "label": "phishing", "language": "en", "script": "native", "category": "Lottery/Reward"},
+  {"text": "Your parcel is held at customs. Pay Rs 150 duty to release: delivery-customs-pay.click", "label": "phishing", "language": "en", "script": "native", "category": "Delivery"},
+  {"text": "URGENT: Your electricity connection will be disconnected tonight at 9:30 PM. Pay now to avoid disconnection: power-bill-pay.tk", "label": "phishing", "language": "en", "script": "native", "category": "Utility Payment"},
+  {"text": "Hey, are we still meeting for lunch tomorrow at 1pm?", "label": "safe", "language": "en", "script": "native", "category": "Other"},
+  {"text": "Your Amazon order #4471 has shipped and will arrive Thursday.", "label": "safe", "language": "en", "script": "native", "category": "Other"},
+
+  {"text": "आपका बैंक खाता आज बंद हो जाएगा। कृपया तुरंत अपना KYC सत्यापित करें और OTP साझा करें।", "label": "phishing", "language": "hi", "script": "native", "category": "KYC"},
+  {"text": "बधाई हो! आपने लॉटरी में 25 लाख रुपये जीते हैं। अभी दावा करें।", "label": "phishing", "language": "hi", "script": "native", "category": "Lottery/Reward"},
+  {"text": "कल शाम को हमारी मीटिंग रीशेड्यूल हो गई है, कृपया नोट कर लें।", "label": "safe", "language": "hi", "script": "native", "category": "Other"},
+  {"text": "Aapka bank account block ho jayega, KYC update karein turant is link par: hdfcbnk-verify.xyz", "label": "phishing", "language": "hi", "script": "romanized", "category": "KYC"},
+  {"text": "Aapka electricity bill overdue hai, turant click karein warna connection band ho jayega.", "label": "phishing", "language": "hi", "script": "romanized", "category": "Utility Payment"},
+  {"text": "Kal ka plan confirm hai, hum 6 baje milenge station ke paas.", "label": "safe", "language": "hi", "script": "romanized", "category": "Other"},
+
+  {"text": "உங்கள் வங்கி கணக்கு இன்று முடக்கப்படும். உடனடியாக KYC ஐ சரிபார்க்கவும்.", "label": "phishing", "language": "ta", "script": "native", "category": "KYC"},
+  {"text": "வாழ்த்துக்கள்! நீங்கள் லாட்டரியில் 25 லட்சம் ரூபாய் வென்றுள்ளீர்கள்.", "label": "phishing", "language": "ta", "script": "native", "category": "Lottery/Reward"},
+  {"text": "நாளை மாலை கூட்டம் ஒத்திவைக்கப்பட்டுள்ளது, தயவுசெய்து கவனிக்கவும்.", "label": "safe", "language": "ta", "script": "native", "category": "Other"},
+  {"text": "Ungal account block aagum, KYC update pannunga immediately: sbi-verify.xyz", "label": "phishing", "language": "ta", "script": "romanized", "category": "KYC"},
+  {"text": "உங்கள் account block ஆகும், link click பண்ணுங்க KYC update panna.", "label": "phishing", "language": "ta", "script": "code_mixed", "category": "KYC"},
+  {"text": "Nalaikku evelo mani meet aaganum sollunga.", "label": "safe", "language": "ta", "script": "romanized", "category": "Other"},
+
+  {"text": "ఈ రోజు మీ బ్యాంక్ ఖాతా బ్లాక్ చేయబడుతుంది. వెంటనే KYC ధృవీకరించండి.", "label": "phishing", "language": "te", "script": "native", "category": "KYC"},
+  {"text": "అభినందనలు! మీరు లాటరీలో 25 లక్షలు గెలుచుకున్నారు.", "label": "phishing", "language": "te", "script": "native", "category": "Lottery/Reward"},
+  {"text": "రేపు సాయంత్రం సమావేశం వాయిదా పడింది, దయచేసి గమనించండి.", "label": "safe", "language": "te", "script": "native", "category": "Other"},
+  {"text": "Meeru bank account block avutundi, KYC update cheyandi ventane: hdfc-verify.xyz", "label": "phishing", "language": "te", "script": "romanized", "category": "KYC"},
+
+  {"text": "আপনার ব্যাংক অ্যাকাউন্ট আজ বন্ধ হয়ে যাবে। এখনই KYC যাচাই করুন।", "label": "phishing", "language": "bn", "script": "native", "category": "KYC"},
+  {"text": "অভিনন্দন! আপনি লটারিতে ২৫ লক্ষ টাকা জিতেছেন।", "label": "phishing", "language": "bn", "script": "native", "category": "Lottery/Reward"},
+  {"text": "আগামীকাল বিকেলের মিটিং পিছিয়ে গেছে, দয়া করে লক্ষ্য করুন।", "label": "safe", "language": "bn", "script": "native", "category": "Other"},
+  {"text": "Apnar bank account bondho hoye jabe, ekhoni KYC korun: sbi-verify.xyz", "label": "phishing", "language": "bn", "script": "romanized", "category": "KYC"},
+
+  {"text": "ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಖಾತೆ ಇಂದು ಬ್ಲಾಕ್ ಆಗುತ್ತದೆ. ತಕ್ಷಣ KYC ಪರಿಶೀಲಿಸಿ.", "label": "phishing", "language": "kn", "script": "native", "category": "KYC"},
+  {"text": "ಅಭಿನಂದನೆಗಳು! ನೀವು ಲಾಟರಿಯಲ್ಲಿ 25 ಲಕ್ಷ ಗೆದ್ದಿದ್ದೀರಿ.", "label": "phishing", "language": "kn", "script": "native", "category": "Lottery/Reward"},
+  {"text": "ನಾಳೆ ಸಂಜೆಯ ಸಭೆ ಮುಂದೂಡಲ್ಪಟ್ಟಿದೆ, ದಯವಿಟ್ಟು ಗಮನಿಸಿ.", "label": "safe", "language": "kn", "script": "native", "category": "Other"},
+  {"text": "Nimma bank account block agutte. KYC update madi immediately: hdfcbnk-kyc-verify.xyz", "label": "phishing", "language": "kn", "script": "romanized", "category": "KYC"},
+  {"text": "Nimma account block agutte. KYC update madi immediately.", "label": "phishing", "language": "kn", "script": "code_mixed", "category": "KYC"},
+  {"text": "Nalé nimma jothe cinema hogona antha plan madidivi.", "label": "safe", "language": "kn", "script": "romanized", "category": "Other"},
+
+  {"text": "Job offer: Work from home, earn 5000 per day, no experience needed. Pay Rs 500 registration fee first: job-easy-money.xyz", "label": "phishing", "language": "en", "script": "native", "category": "Job Scam"},
+  {"text": "You have been selected for a government scholarship. Pay processing fee to claim: scholarship-claim.tk", "label": "phishing", "language": "en", "script": "native", "category": "Scholarship"},
+  {"text": "Investment opportunity: double your money in 7 days, guaranteed returns. Invest now: crypto-double.buzz", "label": "phishing", "language": "en", "script": "native", "category": "Investment"},
+  {"text": "Your Aadhaar card will be deactivated. Update your details immediately: uidai-update-now.xyz", "label": "phishing", "language": "en", "script": "native", "category": "Government"},
+  {"text": "The quarterly team meeting has been moved to Friday at 3pm.", "label": "safe", "language": "en", "script": "native", "category": "Other"},
+  {"text": "Please review the attached invoice and let me know if everything looks correct.", "label": "safe", "language": "en", "script": "native", "category": "Other"}
+]
